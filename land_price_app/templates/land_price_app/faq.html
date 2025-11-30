@@ -1,0 +1,221 @@
+{% extends 'land_price_app/base.html' %}
+
+{% block title %}FAQ - Land Price Prediction{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Hero Section -->
+    <div class="text-center mb-5">
+        <h1 class="display-4 fw-bold mb-3" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+            Frequently Asked Questions
+        </h1>
+        <p class="lead text-muted">Find answers to common questions about our land price prediction system</p>
+    </div>
+
+    <!-- FAQ Accordion -->
+    <div class="row justify-content-center mb-5">
+        <div class="col-lg-10">
+            <div class="accordion accordion-flush" id="faqAccordion">
+                <!-- Question 1 -->
+                <div class="accordion-item prediction-card mb-3 border-0">
+                    <h2 class="accordion-header" id="q1">
+                        <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#a1" aria-expanded="false" aria-controls="a1">
+                            <i class="bi bi-question-circle-fill me-3" style="color: #667eea; font-size: 1.5rem;"></i>
+                            What inputs are required to predict land price?
+                        </button>
+                    </h2>
+                    <div id="a1" class="accordion-collapse collapse" aria-labelledby="q1" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            <p>Our prediction system requires the following inputs:</p>
+                            <ul class="mb-0">
+                                <li><strong>Village:</strong> The location/village where the land is situated</li>
+                                <li><strong>Area:</strong> Total area in square feet</li>
+                                <li><strong>Distance to City:</strong> Distance from the nearest city in kilometers</li>
+                                <li><strong>Road Access:</strong> Type of road access (Rural Road, City Road, or Highway)</li>
+                                <li><strong>Water Source:</strong> Available water source (Well, Borewell, River, or None)</li>
+                                <li><strong>Electricity:</strong> Whether electricity is available</li>
+                                <li><strong>Land Use:</strong> Intended use (Agricultural, Commercial, or Residential)</li>
+                                <li><strong>Soil Type:</strong> Type of soil (Clay, Sandy, Loamy, or Rocky)</li>
+                                <li><strong>Nearby Development:</strong> Level of nearby development (Low, Medium, or High)</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Question 2 -->
+                <div class="accordion-item prediction-card mb-3 border-0">
+                    <h2 class="accordion-header" id="q2">
+                        <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#a2" aria-expanded="false" aria-controls="a2">
+                            <i class="bi bi-graph-up-arrow me-3" style="color: #10b981; font-size: 1.5rem;"></i>
+                            How accurate are the predictions?
+                        </button>
+                    </h2>
+                    <div id="a2" class="accordion-collapse collapse" aria-labelledby="q2" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            <p>Our machine learning model is trained on extensive datasets and provides reliable price estimates. However, accuracy depends on several factors:</p>
+                            <ul class="mb-0">
+                                <li>Data quality and completeness of input parameters</li>
+                                <li>Market conditions and regional variations</li>
+                                <li>Recent changes in infrastructure or development</li>
+                            </ul>
+                            <p class="mt-3 mb-0"><strong>Note:</strong> Predictions should be used as guidance and estimates, not absolute valuations. We recommend consulting with real estate professionals for final decisions.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Question 3 -->
+                <div class="accordion-item prediction-card mb-3 border-0">
+                    <h2 class="accordion-header" id="q3">
+                        <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#a3" aria-expanded="false" aria-controls="a3">
+                            <i class="bi bi-shield-lock-fill me-3" style="color: #f59e0b; font-size: 1.5rem;"></i>
+                            Is my data stored and secure?
+                        </button>
+                    </h2>
+                    <div id="a3" class="accordion-collapse collapse" aria-labelledby="q3" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            <p>Yes, predictions may be saved to compute global statistics and improve our model. However:</p>
+                            <ul class="mb-0">
+                                <li><strong>No Personal Information:</strong> We don't require or store sensitive personal information</li>
+                                <li><strong>Anonymous Data:</strong> Only land attributes and predicted prices are stored</li>
+                                <li><strong>Privacy Protected:</strong> Your data is used solely for statistical purposes and model improvement</li>
+                                <li><strong>Secure Storage:</strong> All data is stored securely in our database</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Question 4 -->
+                <div class="accordion-item prediction-card mb-3 border-0">
+                    <h2 class="accordion-header" id="q4">
+                        <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#a4" aria-expanded="false" aria-controls="a4">
+                            <i class="bi bi-currency-rupee me-3" style="color: #667eea; font-size: 1.5rem;"></i>
+                            Which currencies are supported?
+                        </button>
+                    </h2>
+                    <div id="a4" class="accordion-collapse collapse" aria-labelledby="q4" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            <p>Currently, all values are displayed in <strong>Indian Rupees (₹)</strong> by default. The system is designed for the Indian real estate market and uses rupee-based pricing.</p>
+                            <p class="mb-0">If you need predictions in other currencies, you can convert the results using current exchange rates.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Question 5 -->
+                <div class="accordion-item prediction-card mb-3 border-0">
+                    <h2 class="accordion-header" id="q5">
+                        <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#a5" aria-expanded="false" aria-controls="a5">
+                            <i class="bi bi-bar-chart-fill me-3" style="color: #4facfe; font-size: 1.5rem;"></i>
+                            Can I view analytics and statistics?
+                        </button>
+                    </h2>
+                    <div id="a5" class="accordion-collapse collapse" aria-labelledby="q5" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            <p>Yes! Our dashboard provides comprehensive analytics including:</p>
+                            <ul class="mb-0">
+                                <li><strong>Average Price:</strong> Mean price per square foot across all predictions</li>
+                                <li><strong>Total Predictions:</strong> Count of all predictions made</li>
+                                <li><strong>Price Range:</strong> Minimum and maximum prices observed</li>
+                                <li><strong>Village Analysis:</strong> Average prices by village in an interactive chart</li>
+                                <li><strong>Recent Predictions:</strong> Latest predictions with detailed information</li>
+                            </ul>
+                            <p class="mt-3 mb-0">Access the dashboard from the navigation menu or <a href="{% url 'land_price_app:dashboard' %}">click here</a>.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Question 6 -->
+                <div class="accordion-item prediction-card mb-3 border-0">
+                    <h2 class="accordion-header" id="q6">
+                        <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#a6" aria-expanded="false" aria-controls="a6">
+                            <i class="bi bi-person-check-fill me-3" style="color: #f5576c; font-size: 1.5rem;"></i>
+                            Do I need to create an account?
+                        </button>
+                    </h2>
+                    <div id="a6" class="accordion-collapse collapse" aria-labelledby="q6" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            <p>No, you can make predictions without creating an account. However, creating an account provides additional benefits:</p>
+                            <ul class="mb-0">
+                                <li>Access to the full analytics dashboard</li>
+                                <li>View your prediction history</li>
+                                <li>Save and track multiple predictions</li>
+                                <li>Get personalized insights</li>
+                            </ul>
+                            <p class="mt-3 mb-0">You can <a href="{% url 'land_price_app:register' %}">register for free</a> or <a href="{% url 'land_price_app:login' %}">login</a> if you already have an account.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Question 7 -->
+                <div class="accordion-item prediction-card mb-3 border-0">
+                    <h2 class="accordion-header" id="q7">
+                        <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#a7" aria-expanded="false" aria-controls="a7">
+                            <i class="bi bi-cpu-fill me-3" style="color: #667eea; font-size: 1.5rem;"></i>
+                            What machine learning model is used?
+                        </button>
+                    </h2>
+                    <div id="a7" class="accordion-collapse collapse" aria-labelledby="q7" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            <p>Our system uses a <strong>Random Forest Regressor</strong> from Scikit-learn, which is:</p>
+                            <ul class="mb-0">
+                                <li>Trained on extensive land price datasets</li>
+                                <li>Optimized for real estate price prediction</li>
+                                <li>Regularly updated with new data</li>
+                                <li>Validated for accuracy and reliability</li>
+                            </ul>
+                            <p class="mt-3 mb-0">The model processes multiple features simultaneously to provide accurate price estimates based on complex relationships between various land attributes.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Still Have Questions Section -->
+    <div class="row justify-content-center mb-5">
+        <div class="col-lg-8">
+            <div class="prediction-card p-5 text-center" style="background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);">
+                <i class="bi bi-chat-dots-fill mb-3" style="font-size: 4rem; color: #667eea;"></i>
+                <h3 class="fw-bold mb-3">Still Have Questions?</h3>
+                <p class="lead mb-4">Can't find the answer you're looking for? Please get in touch with our friendly team.</p>
+                <a href="{% url 'land_price_app:contact' %}" class="btn btn-primary btn-lg">
+                    <i class="bi bi-envelope me-2"></i>Contact Us
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Links -->
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="prediction-card p-4 text-center h-100">
+                <i class="bi bi-house-fill mb-3" style="font-size: 3rem; color: #667eea;"></i>
+                <h5 class="fw-bold mb-2">Get Started</h5>
+                <p class="text-muted small mb-3">Make your first prediction and see how it works.</p>
+                <a href="{% url 'land_price_app:home' %}#predict-form" class="btn btn-outline-primary btn-sm">
+                    Make Prediction <i class="bi bi-arrow-right ms-1"></i>
+                </a>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="prediction-card p-4 text-center h-100">
+                <i class="bi bi-info-circle-fill mb-3" style="font-size: 3rem; color: #f59e0b;"></i>
+                <h5 class="fw-bold mb-2">Learn More</h5>
+                <p class="text-muted small mb-3">Discover how our system works and the technology behind it.</p>
+                <a href="{% url 'land_price_app:about' %}" class="btn btn-outline-primary btn-sm">
+                    About Us <i class="bi bi-arrow-right ms-1"></i>
+                </a>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="prediction-card p-4 text-center h-100">
+                <i class="bi bi-graph-up-arrow mb-3" style="font-size: 3rem; color: #10b981;"></i>
+                <h5 class="fw-bold mb-2">View Analytics</h5>
+                <p class="text-muted small mb-3">Explore comprehensive statistics and insights.</p>
+                <a href="{% url 'land_price_app:dashboard' %}" class="btn btn-outline-primary btn-sm">
+                    Dashboard <i class="bi bi-arrow-right ms-1"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

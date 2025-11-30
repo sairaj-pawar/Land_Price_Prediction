@@ -1,0 +1,86 @@
+{% extends 'land_price_app/base.html' %}
+{% load currency %}
+
+{% block title %}Prediction Result{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="result-container">
+                <h2 class="text-center mb-4">Land Price Prediction Result</h2>
+                
+                <!-- Predicted Price Display -->
+                <div class="text-center mb-4">
+                    <div class="price-display">
+                        {{ prediction.predicted_price|rupee_format }}<small class="fs-5">/sqft</small>
+                    </div>
+                    <p class="text-muted mb-0">Estimated Price Per Square Foot</p>
+                </div>
+                
+                <!-- Total Value Card -->
+                <div class="text-center mb-4 p-4 rounded-3" style="background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);">
+                    <h5 class="text-muted mb-2">Total Land Value</h5>
+                    <h3 class="mb-0" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-weight: 800;">
+                        {{ total_value|rupee_format }}
+                    </h3>
+                </div>
+                
+                <!-- Summary Table -->
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <tbody>
+                            <tr>
+                                <th>Village:</th>
+                                <td>{{ prediction.village }}</td>
+                            </tr>
+                            <tr>
+                                <th>Area:</th>
+                                <td>{{ prediction.area_sqft|floatformat:2 }} sq ft</td>
+                            </tr>
+                            <tr>
+                                <th>Distance to City:</th>
+                                <td>{{ prediction.distance_to_city_km|floatformat:2 }} km</td>
+                            </tr>
+                            <tr>
+                                <th>Road Access:</th>
+                                <td>{{ prediction.road_access }}</td>
+                            </tr>
+                            <tr>
+                                <th>Water Source:</th>
+                                <td>{{ prediction.water_source }}</td>
+                            </tr>
+                            <tr>
+                                <th>Electricity:</th>
+                                <td>{% if prediction.electricity_available %}Available{% else %}Not Available{% endif %}</td>
+                            </tr>
+                            <tr>
+                                <th>Land Use:</th>
+                                <td>{{ prediction.land_use }}</td>
+                            </tr>
+                            <tr>
+                                <th>Soil Type:</th>
+                                <td>{{ prediction.soil_type }}</td>
+                            </tr>
+                            <tr>
+                                <th>Development:</th>
+                                <td>{{ prediction.nearby_development }}</td>
+                            </tr>
+                            <tr>
+                                <th>Total Value:</th>
+                                <td>{{ total_value|rupee_format }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Actions -->
+                <div class="text-center mt-4">
+                    <a href="{% url 'land_price_app:home' %}" class="btn btn-primary me-2">New Prediction</a>
+                    <a href="{% url 'land_price_app:dashboard' %}" class="btn btn-outline-primary">View Dashboard</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

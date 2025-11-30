@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Land Price Prediction System{% endblock %}</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Favicon (inline SVG using Bootstrap icon) -->
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='%23136cfb' d='M8 .5l6.5 3.25v8.5L8 15.5l-6.5-3.25v-8.5L8 .5z'/%3E%3Cpath fill='%23fff' d='M4 6.5h8v1H4zm0 2h8v1H4z'/%3E%3C/svg%3E">
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Custom CSS -->
+    {% load static %}
+    <link href="{% static 'land_price_app/css/style.css' %}" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="{% url 'land_price_app:home' %}">
+                <i class="bi bi-house-fill me-2" style="font-size:1.2rem"></i>
+                <span>Land Price Predictor</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.view_name == 'land_price_app:home' %}active{% endif %}" 
+                           href="{% url 'land_price_app:home' %}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'land_price_app:home' %}#predict-form">Predict</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.view_name == 'land_price_app:dashboard' %}active{% endif %}" 
+                           href="{% url 'land_price_app:dashboard' %}">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.view_name == 'land_price_app:about' %}active{% endif %}" 
+                           href="{% url 'land_price_app:about' %}">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.view_name == 'land_price_app:contact' %}active{% endif %}" 
+                           href="{% url 'land_price_app:contact' %}">Contact</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.view_name == 'land_price_app:blog' %}active{% endif %}" 
+                           href="{% url 'land_price_app:blog' %}">Blog</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.view_name == 'land_price_app:faq' %}active{% endif %}" 
+                           href="{% url 'land_price_app:faq' %}">FAQ</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav">
+                    {% if user.is_authenticated %}
+                        <li class="nav-item">
+                            <span class="nav-link">Welcome, {{ user.username }}</span>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'land_price_app:logout' %}">Logout</a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'land_price_app:login' %}">Login</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'land_price_app:register' %}">Register</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container py-4">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer-upgraded mt-auto">
+        <div class="footer-wave">
+            <svg viewBox="0 0 1200 120" preserveAspectRatio="none">
+                <path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" opacity=".25" fill="currentColor"></path>
+                <path d="M0,0V15.81C13,36.92,27.64,56.86,47.69,72.05,99.41,111.27,165,111,224.58,91.58c31.15-10.15,60.09-26.07,89.67-39.8,40.92-19,84.73-46,130.83-49.67,36.26-2.85,70.9,9.42,98.6,31.56,31.77,25.39,62.32,62,103.63,73,40.44,10.79,81.35-6.69,119.13-24.28s75.16-39,116.92-43.05c59.73-5.85,113.28,22.88,168.9,38.84,30.2,8.66,59,6.17,87.09-7.5,22.43-10.89,48-26.93,60.65-49.24V0Z" opacity=".5" fill="currentColor"></path>
+                <path d="M0,0V5.63C149.93,59,314.09,71.32,475.83,42.57c43-7.64,84.23-20.12,127.61-26.46,59-8.63,112.48,12.24,165.56,35.4C827.93,77.22,886,95.24,951.2,90c86.53-7,172.46-45.71,248.8-84.81V0Z" fill="currentColor"></path>
+            </svg>
+        </div>
+        <div class="container py-5">
+            <div class="row g-4">
+                <!-- About Section -->
+                <div class="col-lg-4 col-md-6">
+                    <div class="footer-brand mb-4">
+                        <h4 class="footer-title mb-3">
+                            <i class="bi bi-house-heart-fill me-2"></i>Land Price Predictor
+                        </h4>
+                        <p class="footer-text">
+                            Advanced AI-powered land price prediction system helping you make informed real estate decisions with accurate market insights and cutting-edge machine learning technology.
+                        </p>
+                    </div>
+                    <div class="social-links mt-4">
+                        <a href="#" class="social-link" aria-label="Facebook" title="Facebook">
+                            <i class="bi bi-facebook"></i>
+                        </a>
+                        <a href="#" class="social-link" aria-label="Twitter" title="Twitter">
+                            <i class="bi bi-twitter"></i>
+                        </a>
+                        <a href="#" class="social-link" aria-label="LinkedIn" title="LinkedIn">
+                            <i class="bi bi-linkedin"></i>
+                        </a>
+                        <a href="#" class="social-link" aria-label="Instagram" title="Instagram">
+                            <i class="bi bi-instagram"></i>
+                        </a>
+                        <a href="#" class="social-link" aria-label="YouTube" title="YouTube">
+                            <i class="bi bi-youtube"></i>
+                        </a>
+                        <a href="#" class="social-link" aria-label="GitHub" title="GitHub">
+                            <i class="bi bi-github"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Quick Links -->
+                <div class="col-lg-2 col-md-6">
+                    <h5 class="footer-title mb-4">
+                        <i class="bi bi-link-45deg me-2"></i>Quick Links
+                    </h5>
+                    <ul class="footer-links">
+                        <li><a href="{% url 'land_price_app:home' %}"><i class="bi bi-house-door me-2"></i>Home</a></li>
+                        <li><a href="{% url 'land_price_app:home' %}#predict-form"><i class="bi bi-calculator me-2"></i>Predict Price</a></li>
+                        <li><a href="{% url 'land_price_app:dashboard' %}"><i class="bi bi-speedometer2 me-2"></i>Dashboard</a></li>
+                        <li><a href="{% url 'land_price_app:blog' %}"><i class="bi bi-journal-text me-2"></i>Blog</a></li>
+                        <li><a href="{% url 'land_price_app:about' %}"><i class="bi bi-info-circle me-2"></i>About Us</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Resources -->
+                <div class="col-lg-2 col-md-6">
+                    <h5 class="footer-title mb-4">
+                        <i class="bi bi-folder2-open me-2"></i>Resources
+                    </h5>
+                    <ul class="footer-links">
+                        <li><a href="{% url 'land_price_app:faq' %}"><i class="bi bi-question-circle me-2"></i>FAQ</a></li>
+                        <li><a href="{% url 'land_price_app:contact' %}"><i class="bi bi-envelope me-2"></i>Contact</a></li>
+                        <li><a href="#"><i class="bi bi-shield-check me-2"></i>Privacy Policy</a></li>
+                        <li><a href="#"><i class="bi bi-file-text me-2"></i>Terms of Service</a></li>
+                        <li><a href="#"><i class="bi bi-headset me-2"></i>Help Center</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Newsletter & Contact -->
+                <div class="col-lg-4 col-md-6">
+                    <h5 class="footer-title mb-4">
+                        <i class="bi bi-bell-fill me-2"></i>Stay Updated
+                    </h5>
+                    <p class="footer-text mb-3">Subscribe to our newsletter for the latest updates, market insights, and exclusive tips.</p>
+                    <form class="newsletter-form mb-4" method="post" action="{% url 'land_price_app:contact' %}">
+                        {% csrf_token %}
+                        <div class="input-group">
+                            <input type="email" class="form-control newsletter-input" placeholder="Enter your email" name="email" required>
+                            <button class="btn newsletter-btn" type="submit" title="Subscribe">
+                                <i class="bi bi-send-fill"></i>
+                            </button>
+                        </div>
+                    </form>
+                    <div class="contact-info">
+                        <div class="contact-item mb-3">
+                            <i class="bi bi-envelope-fill me-2"></i>
+                            <a href="mailto:info@landpricepredictor.com">info@landpricepredictor.com</a>
+                        </div>
+                        <div class="contact-item mb-3">
+                            <i class="bi bi-telephone-fill me-2"></i>
+                            <a href="tel:+1234567890">+1 (234) 567-890</a>
+                        </div>
+                        <div class="contact-item">
+                            <i class="bi bi-geo-alt-fill me-2"></i>
+                            <span>123 Real Estate Ave, City, State 12345</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Developer Credits -->
+            <div class="developer-credits mt-5 pt-4 border-top">
+                <div class="row align-items-center">
+                    <div class="col-md-6 mb-3 mb-md-0">
+                        <p class="mb-0 footer-text">
+                            <i class="bi bi-code-slash me-2"></i>
+                            Developed by 
+                            <span class="developer-name">Disha</span> & <span class="developer-name">Gayatri</span>
+                        </p>
+                    </div>
+                    <div class="col-md-6 text-md-end">
+                        <p class="mb-0 footer-text">
+                            <i class="bi bi-copyright me-1"></i> 2025 Land Price Prediction System. All rights reserved.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- Bootstrap 5 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Small JS helpers (form spinner) -->
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Smooth scroll for in-page anchors
+        document.querySelectorAll('a[href^="#"]').forEach(function(anchor) {
+            anchor.addEventListener('click', function (e) {
+                var targetId = this.getAttribute('href');
+                if (targetId.length > 1) {
+                    var target = document.querySelector(targetId);
+                    if (target) {
+                        e.preventDefault();
+                        target.scrollIntoView({ behavior: 'smooth' });
+                    }
+                }
+            });
+        });
+        // Attach to predict buttons to show a spinner and disable to avoid double submits
+        document.querySelectorAll('.btn-predict').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                var spinner = this.querySelector('.btn-spinner');
+                if (spinner) spinner.classList.remove('d-none');
+                this.setAttribute('disabled', 'disabled');
+                // find the nearest form and submit if not already
+                var form = this.closest('form');
+                if (form) form.submit();
+            });
+        });
+    });
+    </script>
+
+    <!-- Custom JS -->
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

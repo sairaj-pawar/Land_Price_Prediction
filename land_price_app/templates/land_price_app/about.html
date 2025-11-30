@@ -1,0 +1,222 @@
+{% extends 'land_price_app/base.html' %}
+
+{% block title %}About - Land Price Prediction{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Hero Section -->
+    <div class="text-center mb-5">
+        <h1 class="display-4 fw-bold mb-3" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+            About Our System
+        </h1>
+        <p class="lead text-muted">AI-Powered Land Price Prediction with Machine Learning</p>
+    </div>
+
+    <!-- Main Content -->
+    <div class="row g-4 mb-5">
+        <!-- Overview Card -->
+        <div class="col-lg-12">
+            <div class="prediction-card p-4 p-md-5">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <h2 class="mb-4 fw-bold">
+                            <i class="bi bi-info-circle-fill me-2" style="color: #667eea;"></i>
+                            What We Do
+                        </h2>
+                        <p class="lead mb-4">
+                            Our Land Price Prediction System uses advanced machine learning algorithms to estimate land prices 
+                            based on comprehensive attributes. Get instant, data-driven price estimates to make informed decisions 
+                            about land investments.
+                        </p>
+                        <p class="mb-0">
+                            By analyzing factors like location, infrastructure, amenities, and development potential, our system 
+                            provides accurate price predictions per square foot, helping buyers, sellers, and investors make 
+                            smarter real estate decisions.
+                        </p>
+                    </div>
+                    <div class="col-md-4 text-center">
+                        <div class="p-4 rounded-3" style="background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);">
+                            <i class="bi bi-graph-up-arrow" style="font-size: 5rem; color: #667eea;"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Features Section -->
+    <div class="row g-4 mb-5">
+        <div class="col-12">
+            <h3 class="text-center mb-4 fw-bold">
+                <i class="bi bi-star-fill me-2" style="color: #f59e0b;"></i>
+                Key Features
+            </h3>
+        </div>
+        <div class="col-md-4">
+            <div class="prediction-card p-4 text-center h-100">
+                <div class="mb-3">
+                    <i class="bi bi-cpu-fill" style="font-size: 3rem; color: #667eea;"></i>
+                </div>
+                <h4 class="fw-bold mb-3">AI-Powered Predictions</h4>
+                <p class="text-muted">Advanced machine learning models trained on extensive datasets for accurate price estimation.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="prediction-card p-4 text-center h-100">
+                <div class="mb-3">
+                    <i class="bi bi-lightning-charge-fill" style="font-size: 3rem; color: #f59e0b;"></i>
+                </div>
+                <h4 class="fw-bold mb-3">Instant Results</h4>
+                <p class="text-muted">Get price predictions in seconds with our optimized prediction engine.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="prediction-card p-4 text-center h-100">
+                <div class="mb-3">
+                    <i class="bi bi-bar-chart-fill" style="font-size: 3rem; color: #10b981;"></i>
+                </div>
+                <h4 class="fw-bold mb-3">Comprehensive Analytics</h4>
+                <p class="text-muted">View detailed statistics, trends, and insights through our interactive dashboard.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Technology Stack -->
+    <div class="row g-4 mb-5">
+        <div class="col-12">
+            <div class="prediction-card p-4 p-md-5">
+                <h3 class="mb-4 fw-bold">
+                    <i class="bi bi-code-slash me-2" style="color: #667eea;"></i>
+                    Technology Stack
+                </h3>
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        <div class="d-flex align-items-start mb-3">
+                            <div class="flex-shrink-0">
+                                <div class="rounded-circle p-2" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); width: 50px; height: 50px; display: flex; align-items: center; justify-content: center;">
+                                    <i class="bi bi-filetype-py text-white fs-5"></i>
+                                </div>
+                            </div>
+                            <div class="flex-grow-1 ms-3">
+                                <h5 class="fw-bold mb-1">Django 5</h5>
+                                <p class="text-muted mb-0">Python web framework for robust backend and templating</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="d-flex align-items-start mb-3">
+                            <div class="flex-shrink-0">
+                                <div class="rounded-circle p-2" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); width: 50px; height: 50px; display: flex; align-items: center; justify-content: center;">
+                                    <i class="bi bi-diagram-3 text-white fs-5"></i>
+                                </div>
+                            </div>
+                            <div class="flex-grow-1 ms-3">
+                                <h5 class="fw-bold mb-1">Scikit-learn</h5>
+                                <p class="text-muted mb-0">Machine learning library for predictive modeling</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="d-flex align-items-start mb-3">
+                            <div class="flex-shrink-0">
+                                <div class="rounded-circle p-2" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); width: 50px; height: 50px; display: flex; align-items: center; justify-content: center;">
+                                    <i class="bi bi-bootstrap text-white fs-5"></i>
+                                </div>
+                            </div>
+                            <div class="flex-grow-1 ms-3">
+                                <h5 class="fw-bold mb-1">Bootstrap 5</h5>
+                                <p class="text-muted mb-0">Modern, responsive UI framework</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="d-flex align-items-start mb-3">
+                            <div class="flex-shrink-0">
+                                <div class="rounded-circle p-2" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); width: 50px; height: 50px; display: flex; align-items: center; justify-content: center;">
+                                    <i class="bi bi-database text-white fs-5"></i>
+                                </div>
+                            </div>
+                            <div class="flex-grow-1 ms-3">
+                                <h5 class="fw-bold mb-1">SQLite</h5>
+                                <p class="text-muted mb-0">Lightweight database for data storage</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- How It Works -->
+    <div class="row g-4">
+        <div class="col-12">
+            <div class="prediction-card p-4 p-md-5">
+                <h3 class="mb-4 fw-bold">
+                    <i class="bi bi-gear-fill me-2" style="color: #667eea;"></i>
+                    How It Works
+                </h3>
+                <div class="row g-4">
+                    <div class="col-md-3">
+                        <div class="text-center">
+                            <div class="mb-3">
+                                <div class="rounded-circle d-inline-flex align-items-center justify-content-center" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); width: 80px; height: 80px;">
+                                    <span class="text-white fw-bold fs-3">1</span>
+                                </div>
+                            </div>
+                            <h5 class="fw-bold mb-2">Enter Details</h5>
+                            <p class="text-muted small">Provide land attributes on the prediction form</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="text-center">
+                            <div class="mb-3">
+                                <div class="rounded-circle d-inline-flex align-items-center justify-content-center" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); width: 80px; height: 80px;">
+                                    <span class="text-white fw-bold fs-3">2</span>
+                                </div>
+                            </div>
+                            <h5 class="fw-bold mb-2">AI Processing</h5>
+                            <p class="text-muted small">ML model analyzes inputs and generates prediction</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="text-center">
+                            <div class="mb-3">
+                                <div class="rounded-circle d-inline-flex align-items-center justify-content-center" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); width: 80px; height: 80px;">
+                                    <span class="text-white fw-bold fs-3">3</span>
+                                </div>
+                            </div>
+                            <h5 class="fw-bold mb-2">Get Results</h5>
+                            <p class="text-muted small">Receive price per sqft and total land value</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="text-center">
+                            <div class="mb-3">
+                                <div class="rounded-circle d-inline-flex align-items-center justify-content-center" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); width: 80px; height: 80px;">
+                                    <span class="text-white fw-bold fs-3">4</span>
+                                </div>
+                            </div>
+                            <h5 class="fw-bold mb-2">View Analytics</h5>
+                            <p class="text-muted small">Access dashboard for insights and trends</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Call to Action -->
+    <div class="text-center mt-5 mb-4">
+        <div class="prediction-card p-5" style="background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);">
+            <h3 class="fw-bold mb-3">Ready to Get Started?</h3>
+            <p class="lead mb-4">Start predicting land prices with our AI-powered system</p>
+            <a href="{% url 'land_price_app:home' %}#predict-form" class="btn btn-primary btn-lg me-2">
+                <i class="bi bi-calculator me-2"></i>Make a Prediction
+            </a>
+            <a href="{% url 'land_price_app:dashboard' %}" class="btn btn-outline-primary btn-lg">
+                <i class="bi bi-graph-up me-2"></i>View Dashboard
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

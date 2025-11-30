@@ -1,0 +1,205 @@
+{% extends 'land_price_app/base.html' %}
+
+{% block title %}Blog{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Hero Section -->
+    <div class="blog-hero text-center mb-5 py-5">
+        <h1 class="display-4 fw-bold mb-3" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+            <i class="bi bi-journal-text me-2"></i>Our Blog
+        </h1>
+        <p class="lead text-muted">Insights, tips, and updates about land prices and real estate</p>
+    </div>
+
+    <!-- Search and Filter Bar -->
+    <div class="blog-filters mb-4">
+        <div class="row g-3 align-items-end">
+            <div class="col-md-6">
+                <div class="input-group">
+                    <span class="input-group-text bg-white"><i class="bi bi-search"></i></span>
+                    <input type="text" class="form-control" id="blogSearch" placeholder="Search articles...">
+                </div>
+            </div>
+            <div class="col-md-4">
+                <select class="form-select" id="categoryFilter">
+                    <option value="all">All Categories</option>
+                    <option value="technology">Technology</option>
+                    <option value="market">Market Analysis</option>
+                    <option value="tips">Buying Tips</option>
+                    <option value="legal">Legal Guide</option>
+                    <option value="investment">Investment</option>
+                    <option value="general">General</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <button class="btn btn-primary w-100" onclick="clearFilters()">
+                    <i class="bi bi-arrow-clockwise me-1"></i>Reset
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Featured Post -->
+    {% if featured_post %}
+    <div class="featured-post mb-5">
+        <div class="card border-0 shadow-lg overflow-hidden">
+            <div class="row g-0">
+                <div class="col-md-6">
+                    <img src="{{ featured_post.image|default:'https://images.unsplash.com/photo-1501183638710-841dd1904471?q=80&w=1200&auto=format&fit=crop' }}" 
+                         class="img-fluid h-100" style="object-fit: cover;" alt="{{ featured_post.title }}">
+                </div>
+                <div class="col-md-6">
+                    <div class="card-body p-4 d-flex flex-column h-100">
+                        <span class="badge bg-primary mb-2">Featured</span>
+                        <h2 class="card-title fw-bold mb-3">{{ featured_post.title }}</h2>
+                        <p class="card-text text-muted flex-grow-1">{{ featured_post.summary }}</p>
+                        <div class="d-flex justify-content-between align-items-center mt-auto">
+                            <div>
+                                <small class="text-muted">
+                                    <i class="bi bi-person me-1"></i>{{ featured_post.author }}
+                                    <span class="ms-2"><i class="bi bi-calendar me-1"></i>{{ featured_post.created_at|date:"M d, Y" }}</span>
+                                </small>
+                            </div>
+                            <a href="{{ featured_post.get_absolute_url }}" class="btn btn-primary">
+                                Read More <i class="bi bi-arrow-right ms-1"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Blog Posts Grid -->
+    <div class="row g-4" id="blogPosts">
+        {% for post in blog_posts %}
+        <div class="col-lg-4 col-md-6 blog-post-card" data-category="{{ post.category }}" data-title="{{ post.title|lower }}" data-summary="{{ post.summary|lower }}">
+            <div class="card h-100 border-0 shadow-sm blog-card">
+                <div class="position-relative">
+                    <img src="{{ post.image|default:'https://images.unsplash.com/photo-1501183638710-841dd1904471?q=80&w=800&auto=format&fit=crop' }}" 
+                         class="card-img-top" style="height: 200px; object-fit: cover;" alt="{{ post.title }}">
+                    <span class="badge bg-primary position-absolute top-0 end-0 m-3">{{ post.get_category_display }}</span>
+                </div>
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title fw-bold">{{ post.title }}</h5>
+                    <p class="card-text text-muted flex-grow-1">{{ post.summary|truncatewords:20 }}</p>
+                    <div class="d-flex justify-content-between align-items-center mt-auto pt-3 border-top">
+                        <small class="text-muted">
+                            <i class="bi bi-person me-1"></i>{{ post.author }}
+                            <span class="ms-2"><i class="bi bi-eye me-1"></i>{{ post.views }}</span>
+                        </small>
+                        <a href="{{ post.get_absolute_url }}" class="btn btn-sm btn-outline-primary">
+                            Read <i class="bi bi-arrow-right ms-1"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <div class="text-center py-5">
+                <i class="bi bi-journal-x display-1 text-muted d-block mb-3"></i>
+                <h4 class="text-muted">No blog posts yet</h4>
+                <p class="text-muted">Check back soon for new articles!</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Pagination (if needed) -->
+    {% if blog_posts.has_other_pages %}
+    <nav aria-label="Blog pagination" class="mt-5">
+        <ul class="pagination justify-content-center">
+            {% if blog_posts.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ blog_posts.previous_page_number }}">Previous</a>
+            </li>
+            {% endif %}
+            {% for num in blog_posts.paginator.page_range %}
+            <li class="page-item {% if blog_posts.number == num %}active{% endif %}">
+                <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+            </li>
+            {% endfor %}
+            {% if blog_posts.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ blog_posts.next_page_number }}">Next</a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('blogSearch');
+    const categoryFilter = document.getElementById('categoryFilter');
+    const blogPosts = document.querySelectorAll('.blog-post-card');
+
+    function filterPosts() {
+        const searchTerm = searchInput.value.toLowerCase();
+        const category = categoryFilter.value;
+        
+        blogPosts.forEach(post => {
+            const postCategory = post.getAttribute('data-category');
+            const postTitle = post.getAttribute('data-title');
+            const postSummary = post.getAttribute('data-summary');
+            
+            const matchesSearch = !searchTerm || 
+                postTitle.includes(searchTerm) || 
+                postSummary.includes(searchTerm);
+            const matchesCategory = category === 'all' || postCategory === category;
+            
+            if (matchesSearch && matchesCategory) {
+                post.style.display = '';
+                post.classList.add('animate__animated', 'animate__fadeIn');
+            } else {
+                post.style.display = 'none';
+            }
+        });
+    }
+
+    searchInput.addEventListener('input', filterPosts);
+    categoryFilter.addEventListener('change', filterPosts);
+});
+
+function clearFilters() {
+    document.getElementById('blogSearch').value = '';
+    document.getElementById('categoryFilter').value = 'all';
+    document.querySelectorAll('.blog-post-card').forEach(post => {
+        post.style.display = '';
+    });
+}
+</script>
+
+<style>
+.blog-card {
+    transition: all 0.3s ease;
+    border-radius: 15px;
+    overflow: hidden;
+}
+
+.blog-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15) !important;
+}
+
+.blog-filters {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.featured-post .card {
+    border-radius: 20px;
+}
+</style>
+{% endblock %}
+

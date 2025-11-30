@@ -1,0 +1,405 @@
+{% extends 'land_price_app/base.html' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="text-center mb-5">
+        <h1 class="display-4 fw-bold mb-3" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+            <i class="bi bi-speedometer2 me-2"></i>Analytics Dashboard
+        </h1>
+        <p class="lead text-muted">Comprehensive insights into land price predictions and market trends</p>
+    </div>
+    
+    <!-- Statistics Cards -->
+    <div class="dashboard-stats">
+        <div class="row g-4">
+            <div class="col-lg-3 col-md-6">
+                <div class="stats-card text-white" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                    <i class="bi bi-currency-exchange" data-bs-toggle="tooltip" title="Average predicted price per sqft"></i>
+                    <h3 class="countup" data-target="{{ avg_price|default:0 }}">0</h3>
+                    <p class="mb-0">Average Price /sqft</p>
+                    <small class="opacity-75"><i class="bi bi-arrow-up"></i> Market Average</small>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="stats-card text-white" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                    <i class="bi bi-list-check" data-bs-toggle="tooltip" title="Total number of predictions"></i>
+                    <h3 class="countup" data-target="{{ total_predictions|default:0 }}">0</h3>
+                    <p class="mb-0">Total Predictions</p>
+                    <small class="opacity-75"><i class="bi bi-graph-up"></i> All Time</small>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="stats-card text-white" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                    <i class="bi bi-award" data-bs-toggle="tooltip" title="Price range per sqft"></i>
+                    <h3>
+                        ₹<span class="countup" data-target="{{ min_price|default:0 }}">0</span> - 
+                        ₹<span class="countup" data-target="{{ max_price|default:0 }}">0</span>
+                    </h3>
+                    <p class="mb-0">Price Range</p>
+                    <small class="opacity-75"><i class="bi bi-arrow-left-right"></i> Min - Max</small>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="stats-card text-white" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
+                    <i class="bi bi-graph-up-arrow" data-bs-toggle="tooltip" title="Total market value"></i>
+                    <h3 class="countup" data-target="{{ total_market_value|default:0 }}">0</h3>
+                    <p class="mb-0">Total Market Value</p>
+                    <small class="opacity-75"><i class="bi bi-cash-stack"></i> Combined</small>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Charts Row -->
+    <div class="row g-4 mb-4">
+        <!-- Price by Village Chart -->
+        <div class="col-lg-8">
+            <div class="chart-container">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h4 class="mb-0 fw-bold">
+                        <i class="bi bi-bar-chart-fill me-2"></i>Average Price by Village
+                    </h4>
+                    <select class="form-select form-select-sm chart-filter" id="villageFilter" style="max-width: 200px;">
+                        <option value="all">All Villages</option>
+                        <option value="top5">Top 5</option>
+                        <option value="top10">Top 10</option>
+                    </select>
+                </div>
+                <canvas id="villageChart" style="max-height: 400px;"></canvas>
+            </div>
+        </div>
+        
+        <!-- Price Distribution Chart -->
+        <div class="col-lg-4">
+            <div class="chart-container">
+                <h4 class="mb-4 fw-bold">
+                    <i class="bi bi-pie-chart-fill me-2"></i>Price Distribution
+                </h4>
+                <canvas id="priceDistributionChart" style="max-height: 400px;"></canvas>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Trends Chart -->
+    <div class="chart-container mb-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h4 class="mb-0 fw-bold">
+                <i class="bi bi-graph-up me-2"></i>Price Trends Over Time
+            </h4>
+            <select class="form-select form-select-sm chart-filter" id="trendFilter" style="max-width: 200px;">
+                <option value="7">Last 7 Days</option>
+                <option value="30" selected>Last 30 Days</option>
+                <option value="90">Last 90 Days</option>
+                <option value="all">All Time</option>
+            </select>
+        </div>
+        <canvas id="trendsChart" style="max-height: 300px;"></canvas>
+    </div>
+    
+    <!-- Additional Stats Row -->
+    <div class="row g-4 mb-4">
+        <div class="col-md-6">
+            <div class="prediction-card p-4">
+                <h5 class="mb-3 fw-bold">
+                    <i class="bi bi-trophy-fill me-2 text-warning"></i>Top Performing Villages
+                </h5>
+                <div class="list-group list-group-flush">
+                    {% for village in top_villages|slice:":5" %}
+                    <div class="list-group-item d-flex justify-content-between align-items-center border-0 px-0">
+                        <div>
+                            <strong>{{ village.village }}</strong>
+                            <br><small class="text-muted">{{ village.count }} predictions</small>
+                        </div>
+                        <span class="badge bg-success">₹{{ village.avg_price|floatformat:2 }}/sqft</span>
+                    </div>
+                    {% empty %}
+                    <p class="text-muted text-center py-3">No data available</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="prediction-card p-4">
+                <h5 class="mb-3 fw-bold">
+                    <i class="bi bi-info-circle-fill me-2 text-info"></i>Market Insights
+                </h5>
+                <ul class="list-unstyled mb-0">
+                    <li class="mb-3">
+                        <i class="bi bi-check-circle-fill text-success me-2"></i>
+                        <strong>Most Common Area:</strong> {{ most_common_area|default:"N/A" }} sqft
+                    </li>
+                    <li class="mb-3">
+                        <i class="bi bi-check-circle-fill text-success me-2"></i>
+                        <strong>Average Distance to City:</strong> {{ avg_distance|default:"N/A" }} km
+                    </li>
+                    <li class="mb-3">
+                        <i class="bi bi-check-circle-fill text-success me-2"></i>
+                        <strong>Electricity Coverage:</strong> {{ electricity_percentage|default:"N/A" }}%
+                    </li>
+                    <li>
+                        <i class="bi bi-check-circle-fill text-success me-2"></i>
+                        <strong>Active Predictions:</strong> {{ active_predictions|default:0 }} this month
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Recent Predictions Table -->
+    <div class="prediction-card p-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h4 class="mb-0 fw-bold">
+                <i class="bi bi-clock-history me-2"></i>Recent Predictions
+            </h4>
+            <a href="{% url 'land_price_app:home' %}" class="btn btn-sm btn-outline-primary">
+                <i class="bi bi-plus-circle me-1"></i>New Prediction
+            </a>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead style="background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);">
+                    <tr>
+                        <th class="fw-bold">Village</th>
+                        <th class="fw-bold">Area (sq ft)</th>
+                        <th class="fw-bold">Price/sqft</th>
+                        <th class="fw-bold">Total Value</th>
+                        <th class="fw-bold">Road Access</th>
+                        <th class="fw-bold">Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for pred in recent_predictions %}
+                    <tr style="transition: all 0.3s ease;">
+                        <td><strong>{{ pred.village }}</strong></td>
+                        <td>{{ pred.area_sqft|floatformat:2 }}</td>
+                        <td><span class="badge bg-primary">₹{{ pred.predicted_price|floatformat:2 }}</span></td>
+                        <td><span class="fw-bold text-success">₹{{ pred.total_value|floatformat:2 }}</span></td>
+                        <td><span class="badge bg-secondary">{{ pred.road_access }}</span></td>
+                        <td><small class="text-muted">{{ pred.created_at|date:"M d, Y" }}</small></td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center text-muted py-5">
+                            <i class="bi bi-inbox display-4 d-block mb-3"></i>
+                            No predictions yet. <a href="{% url 'land_price_app:home' %}">Make your first prediction!</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+{{ village_labels|json_script:"villageLabels" }}
+{{ village_prices|json_script:"villagePrices" }}
+{{ trend_data|json_script:"trendData" }}
+{{ price_ranges|json_script:"priceRanges" }}
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Read JSON-safe data embedded by json_script
+    const villageLabels = JSON.parse(document.getElementById('villageLabels').textContent || '[]');
+    const villagePrices = JSON.parse(document.getElementById('villagePrices').textContent || '[]');
+    const trendData = JSON.parse(document.getElementById('trendData').textContent || '{"dates": [], "prices": []}');
+    const priceRanges = JSON.parse(document.getElementById('priceRanges').textContent || '{"labels": [], "data": []}');
+
+    // Village Chart
+    const villageCtx = document.getElementById('villageChart').getContext('2d');
+    const villageChart = new Chart(villageCtx, {
+        type: 'bar',
+        data: {
+            labels: villageLabels,
+            datasets: [{
+                label: 'Average Price per sqft (₹)',
+                data: villagePrices,
+                backgroundColor: 'rgba(99, 102, 241, 0.6)',
+                borderColor: 'rgba(99, 102, 241, 1)',
+                borderWidth: 2,
+                borderRadius: 8,
+                borderSkipped: false
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Price per sqft (₹)'
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    backgroundColor: 'rgba(30, 41, 59, 0.9)',
+                    padding: 12,
+                    titleFont: { size: 14, weight: 'bold' },
+                    bodyFont: { size: 13 },
+                    cornerRadius: 8,
+                    displayColors: false
+                }
+            },
+            animation: {
+                duration: 2000,
+                easing: 'easeInOutQuart'
+            }
+        }
+    });
+
+    // Price Distribution Chart (Pie)
+    const distCtx = document.getElementById('priceDistributionChart').getContext('2d');
+    new Chart(distCtx, {
+        type: 'doughnut',
+        data: {
+            labels: priceRanges.labels || ['Low', 'Medium', 'High', 'Premium'],
+            datasets: [{
+                data: priceRanges.data || [25, 35, 25, 15],
+                backgroundColor: [
+                    'rgba(99, 102, 241, 0.8)',
+                    'rgba(139, 92, 246, 0.8)',
+                    'rgba(240, 147, 251, 0.8)',
+                    'rgba(79, 172, 254, 0.8)'
+                ],
+                borderWidth: 2,
+                borderColor: '#fff'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        padding: 15,
+                        font: { size: 12 }
+                    }
+                },
+                tooltip: {
+                    backgroundColor: 'rgba(30, 41, 59, 0.9)',
+                    padding: 12,
+                    cornerRadius: 8
+                }
+            }
+        }
+    });
+
+    // Trends Chart (Line)
+    const trendsCtx = document.getElementById('trendsChart').getContext('2d');
+    new Chart(trendsCtx, {
+        type: 'line',
+        data: {
+            labels: trendData.dates || [],
+            datasets: [{
+                label: 'Average Price (₹/sqft)',
+                data: trendData.prices || [],
+                borderColor: 'rgba(99, 102, 241, 1)',
+                backgroundColor: 'rgba(99, 102, 241, 0.1)',
+                borderWidth: 3,
+                fill: true,
+                tension: 0.4,
+                pointRadius: 4,
+                pointHoverRadius: 6
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: false,
+                    title: {
+                        display: true,
+                        text: 'Price per sqft (₹)'
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'top'
+                },
+                tooltip: {
+                    backgroundColor: 'rgba(30, 41, 59, 0.9)',
+                    padding: 12,
+                    cornerRadius: 8
+                }
+            },
+            animation: {
+                duration: 2000
+            }
+        }
+    });
+
+    // Filter handlers
+    document.getElementById('villageFilter')?.addEventListener('change', function(e) {
+        const filter = e.target.value;
+        let filteredLabels = villageLabels;
+        let filteredPrices = villagePrices;
+        
+        if (filter === 'top5') {
+            const sorted = villageLabels.map((label, i) => ({label, price: villagePrices[i]}))
+                .sort((a, b) => b.price - a.price).slice(0, 5);
+            filteredLabels = sorted.map(item => item.label);
+            filteredPrices = sorted.map(item => item.price);
+        } else if (filter === 'top10') {
+            const sorted = villageLabels.map((label, i) => ({label, price: villagePrices[i]}))
+                .sort((a, b) => b.price - a.price).slice(0, 10);
+            filteredLabels = sorted.map(item => item.label);
+            filteredPrices = sorted.map(item => item.price);
+        }
+        
+        villageChart.data.labels = filteredLabels;
+        villageChart.data.datasets[0].data = filteredPrices;
+        villageChart.update();
+    });
+});
+</script>
+
+<script>
+// Initialize Bootstrap tooltips
+document.addEventListener('DOMContentLoaded', function() {
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl)
+    })
+
+    // Simple count-up animation for elements with .countup
+    function animateCount(el, start, end, duration) {
+        var startTime = null;
+        function step(timestamp) {
+            if (!startTime) startTime = timestamp;
+            var progress = Math.min((timestamp - startTime) / duration, 1);
+            var current = start + (end - start) * progress;
+            // If value is float (has decimal) show two decimals, else integer
+            if (Math.abs(end - Math.round(end)) > 0.001) {
+                el.textContent = current.toFixed(2);
+            } else {
+                el.textContent = Math.round(current);
+            }
+            if (progress < 1) {
+                window.requestAnimationFrame(step);
+            }
+        }
+        window.requestAnimationFrame(step);
+    }
+
+    var countEls = document.querySelectorAll('.countup');
+    countEls.forEach(function(el) {
+        var target = parseFloat(el.getAttribute('data-target')) || 0;
+        animateCount(el, 0, target, 1000);
+    });
+});
+</script>
+{% endblock %}

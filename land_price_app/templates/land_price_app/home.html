@@ -1,0 +1,151 @@
+{% extends 'land_price_app/base.html' %}
+
+{% block title %}Home - Land Price Prediction{% endblock %}
+
+{% block content %}
+<div class="container">
+    <section class="hero rounded-3 p-4 p-md-5 mb-4">
+        <div class="row align-items-center">
+            <div class="col-lg-7">
+                <h1 class="hero-title mb-3">Predict Land Prices Instantly</h1>
+                <p class="mb-4" style="font-size: 1.1rem; opacity: 0.95;">Enter land attributes and get an accurate estimated price per square foot with AI-powered insights.</p>
+                <div class="d-flex flex-wrap gap-3">
+                    <a href="#predict-form" class="btn btn-light btn-lg">
+                        <i class="bi bi-calculator me-2"></i>Start Prediction
+                    </a>
+                    <a href="{% url 'land_price_app:dashboard' %}" class="btn btn-outline-light btn-lg">
+                        <i class="bi bi-graph-up me-2"></i>View Dashboard
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-5 text-center mt-4 mt-lg-0">
+                <div class="p-4 rounded-3" style="background: rgba(255,255,255,0.2); backdrop-filter: blur(10px);">
+                    <i class="bi bi-house-heart" style="font-size: 5rem; opacity: 0.9;"></i>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <div id="predict-form" class="prediction-form">
+                <form method="post" action="{% url 'land_price_app:result' %}">
+                    {% csrf_token %}
+
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label for="{{ form.village.id_for_label }}" class="form-label">Village</label>
+                            {{ form.village }}
+                            {% if form.village.errors %}
+                                <div class="invalid-feedback d-block">{{ form.village.errors }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-6">
+                            <label for="{{ form.area_sqft.id_for_label }}" class="form-label">Area (sq ft)</label>
+                            {{ form.area_sqft }}
+                            {% if form.area_sqft.errors %}
+                                <div class="invalid-feedback d-block">{{ form.area_sqft.errors }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-6">
+                            <label for="{{ form.distance_to_city_km.id_for_label }}" class="form-label">Distance to City (km)</label>
+                            {{ form.distance_to_city_km }}
+                            {% if form.distance_to_city_km.errors %}
+                                <div class="invalid-feedback d-block">{{ form.distance_to_city_km.errors }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-6">
+                            <label for="{{ form.road_access.id_for_label }}" class="form-label">Road Access</label>
+                            {{ form.road_access }}
+                            {% if form.road_access.errors %}
+                                <div class="invalid-feedback d-block">{{ form.road_access.errors }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-6">
+                            <label for="{{ form.water_source.id_for_label }}" class="form-label">Water Source</label>
+                            {{ form.water_source }}
+                            {% if form.water_source.errors %}
+                                <div class="invalid-feedback d-block">{{ form.water_source.errors }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-6">
+                            <label for="{{ form.land_use.id_for_label }}" class="form-label">Land Use</label>
+                            {{ form.land_use }}
+                            {% if form.land_use.errors %}
+                                <div class="invalid-feedback d-block">{{ form.land_use.errors }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-6">
+                            <label for="{{ form.soil_type.id_for_label }}" class="form-label">Soil Type</label>
+                            {{ form.soil_type }}
+                            {% if form.soil_type.errors %}
+                                <div class="invalid-feedback d-block">{{ form.soil_type.errors }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-6">
+                            <label for="{{ form.nearby_development.id_for_label }}" class="form-label">Nearby Development</label>
+                            {{ form.nearby_development }}
+                            {% if form.nearby_development.errors %}
+                                <div class="invalid-feedback d-block">{{ form.nearby_development.errors }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="col-12">
+                            <div class="form-check">
+                                {{ form.electricity_available }}
+                                <label class="form-check-label" for="{{ form.electricity_available.id_for_label }}">
+                                    Electricity Available
+                                </label>
+                            </div>
+                            {% if form.electricity_available.errors %}
+                                <div class="invalid-feedback d-block">{{ form.electricity_available.errors }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="text-center mt-4">
+                        <button type="submit" class="btn btn-primary btn-lg px-5 btn-predict">
+                            <span class="btn-spinner d-none spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                            Predict Price
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="side-stats p-3 rounded-3">
+                <h5 class="mb-3">Quick Stats</h5>
+                <div class="mb-3">
+                    <strong class="d-block">Average Price</strong>
+                    <div class="fs-5">₹{{ avg_price|default:0|floatformat:2 }}/sqft</div>
+                </div>
+                <div class="mb-3">
+                    <strong class="d-block">Total Predictions</strong>
+                    <div class="fs-5">{{ total_predictions|default:0 }}</div>
+                </div>
+                <div class="mb-3 d-flex justify-content-between">
+                    <div>
+                        <small class="text-muted">Min</small>
+                        <div>₹{{ min_price|default:0|floatformat:2 }}</div>
+                    </div>
+                    <div>
+                        <small class="text-muted">Max</small>
+                        <div>₹{{ max_price|default:0|floatformat:2 }}</div>
+                    </div>
+                </div>
+                <hr>
+                <h6 class="mb-2">Recent Predictions</h6>
+                <ul class="list-unstyled small mb-0">
+                    {% for pred in recent_predictions %}
+                    <li class="d-flex justify-content-between py-1">
+                        <span>{{ pred.village }}</span>
+                        <span class="text-primary">₹{{ pred.predicted_price|floatformat:2 }}</span>
+                    </li>
+                    {% empty %}
+                    <li class="text-muted">No predictions yet.</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

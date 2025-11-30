@@ -1,0 +1,147 @@
+{% extends 'land_price_app/base.html' %}
+
+{% block title %}{{ post.title }}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <!-- Back Button -->
+            <a href="{% url 'land_price_app:blog' %}" class="btn btn-outline-secondary mb-4">
+                <i class="bi bi-arrow-left me-1"></i>Back to Blog
+            </a>
+
+            <!-- Blog Post Header -->
+            <article class="blog-detail">
+                <div class="mb-4">
+                    <span class="badge bg-primary mb-3">{{ post.get_category_display }}</span>
+                    <h1 class="display-5 fw-bold mb-3">{{ post.title }}</h1>
+                    <div class="d-flex align-items-center text-muted mb-4">
+                        <i class="bi bi-person me-2"></i>
+                        <span class="me-4">{{ post.author }}</span>
+                        <i class="bi bi-calendar me-2"></i>
+                        <span class="me-4">{{ post.created_at|date:"F d, Y" }}</span>
+                        <i class="bi bi-eye me-2"></i>
+                        <span>{{ post.views }} views</span>
+                    </div>
+                </div>
+
+                <!-- Featured Image -->
+                {% if post.image %}
+                <div class="blog-image mb-4">
+                    <img src="{{ post.image }}" class="img-fluid rounded-3 shadow" alt="{{ post.title }}" style="max-height: 500px; width: 100%; object-fit: cover;">
+                </div>
+                {% endif %}
+
+                <!-- Blog Content -->
+                <div class="blog-content">
+                    <div class="lead mb-4 text-muted">{{ post.summary }}</div>
+                    <div class="content-body" style="line-height: 1.8; font-size: 1.1rem;">
+                        {{ post.content|linebreaks }}
+                    </div>
+                </div>
+
+                <!-- Share Buttons -->
+                <div class="share-section mt-5 pt-4 border-top">
+                    <h5 class="mb-3">Share this article</h5>
+                    <div class="social-share">
+                        <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}" 
+                           target="_blank" class="btn btn-outline-primary me-2 mb-2">
+                            <i class="bi bi-facebook me-1"></i>Facebook
+                        </a>
+                        <a href="https://twitter.com/intent/tweet?url={{ request.build_absolute_uri }}&text={{ post.title }}" 
+                           target="_blank" class="btn btn-outline-info me-2 mb-2">
+                            <i class="bi bi-twitter me-1"></i>Twitter
+                        </a>
+                        <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ request.build_absolute_uri }}" 
+                           target="_blank" class="btn btn-outline-primary me-2 mb-2">
+                            <i class="bi bi-linkedin me-1"></i>LinkedIn
+                        </a>
+                        <button onclick="copyLink()" class="btn btn-outline-secondary mb-2">
+                            <i class="bi bi-link-45deg me-1"></i>Copy Link
+                        </button>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Related Posts -->
+            {% if related_posts %}
+            <div class="related-posts mt-5 pt-5 border-top">
+                <h3 class="mb-4">Related Articles</h3>
+                <div class="row g-4">
+                    {% for related in related_posts %}
+                    <div class="col-md-6">
+                        <div class="card h-100 border-0 shadow-sm">
+                            {% if related.image %}
+                            <img src="{{ related.image }}" class="card-img-top" style="height: 150px; object-fit: cover;" alt="{{ related.title }}">
+                            {% endif %}
+                            <div class="card-body">
+                                <span class="badge bg-secondary mb-2">{{ related.get_category_display }}</span>
+                                <h5 class="card-title">{{ related.title }}</h5>
+                                <p class="card-text text-muted">{{ related.summary|truncatewords:15 }}</p>
+                                <a href="{{ related.get_absolute_url }}" class="btn btn-sm btn-outline-primary">
+                                    Read More <i class="bi bi-arrow-right ms-1"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function copyLink() {
+    const url = window.location.href;
+    navigator.clipboard.writeText(url).then(function() {
+        alert('Link copied to clipboard!');
+    });
+}
+</script>
+
+<style>
+.blog-detail {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 3rem;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+.content-body {
+    color: #333;
+}
+
+.content-body p {
+    margin-bottom: 1.5rem;
+}
+
+.content-body h2, .content-body h3 {
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    color: #1e293b;
+}
+
+.content-body ul, .content-body ol {
+    margin-bottom: 1.5rem;
+    padding-left: 2rem;
+}
+
+.content-body li {
+    margin-bottom: 0.5rem;
+}
+
+.share-section {
+    background: rgba(99, 102, 241, 0.05);
+    border-radius: 15px;
+    padding: 1.5rem;
+}
+</style>
+{% endblock %}
+
