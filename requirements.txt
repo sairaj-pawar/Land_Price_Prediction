@@ -7,3 +7,4 @@ gunicorn
 whitenoise
 psycopg2-binary
 openpyxl
+dj-database-url
