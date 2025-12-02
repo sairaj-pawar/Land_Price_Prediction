@@ -33,6 +33,8 @@ staticfiles/
 # Machine learning artifacts and raw data
 # (we keep model pickles out of git, but the small example dataset is tracked)
 *.pkl
+!land_price_app/training/ml_model.pkl
+!land_price_app/training/feature_info.pkl
 *.joblib
 *.h5
 *.hdf5
