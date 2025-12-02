@@ -16,7 +16,18 @@ def load_model():
     # Check that the model and feature files exist and load them.
     # If missing, return (None, None) so callers can handle absence gracefully.
     if not os.path.exists(model_path) or not os.path.exists(feature_path):
-        return None, None
+        # Try to create demo artifacts automatically (useful for deployments where
+        # the trained model wasn't committed). This creates a small dataset and
+        # a minimal dummy model so the site can show predictions for demo/demoing.
+        try:
+            from .training import create_dummy_model as _cdm
+            _cdm.create_dummy_model_artifacts(os.path.dirname(__file__))
+        except Exception:
+            # If creation failed, return None so caller can handle gracefully
+            return None, None
+        # After attempting to create, continue to load if they exist
+        if not os.path.exists(model_path) or not os.path.exists(feature_path):
+            return None, None
 
     # Open and load the model file
     # 'rb' means read binary (pickle files are binary)
