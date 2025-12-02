@@ -93,9 +93,18 @@ class LandPredictionForm(forms.ModelForm):
         dataset_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 
                                   '0a73f94e-90e3-4ebd-9d94-15dc8066ad52.xlsx')
         
-        # Try reading the Excel (dataset) file; if it's missing or unreadable,
-        # fall back to an empty list so the form doesn't crash at runtime.
-        villages = []
+            # If the dataset file doesn't exist, try to create a small demo dataset
+            # so the form dropdowns populate on a fresh deployment.
+            try:
+                if not os.path.exists(dataset_path):
+                    from .training import create_dummy_model as _cdm
+                    _cdm.create_dummy_model_artifacts(os.path.dirname(__file__))
+            except Exception:
+                pass
+
+            # Try reading the Excel (dataset) file; if it's missing or unreadable,
+            # fall back to an empty list so the form doesn't crash at runtime.
+            villages = []
         try:
             if os.path.exists(dataset_path):
                 df = pd.read_excel(dataset_path)
