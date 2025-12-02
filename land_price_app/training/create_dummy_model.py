@@ -61,19 +61,31 @@ def create_dummy_model_artifacts(base_dir=None):
     training_dir = os.path.join(base_dir, 'training')
     os.makedirs(training_dir, exist_ok=True)
 
-    # dataset path is expected up one more level (project root) by forms.py
-    dataset_path = os.path.join(os.path.dirname(training_dir), '0a73f94e-90e3-4ebd-9d94-15dc8066ad52.xlsx')
+    # dataset path: write the demo dataset to both the app folder and the
+    # project root so callers that look in either location (forms.py, training)
+    # will find a usable file on a fresh deployment.
+    app_level_dataset_path = os.path.join(os.path.dirname(training_dir), '0a73f94e-90e3-4ebd-9d94-15dc8066ad52.xlsx')
+    # project root is one level above the app (this matches train_model/forms path)
+    project_root = os.path.abspath(os.path.join(os.path.dirname(training_dir), '..'))
+    project_level_dataset_path = os.path.join(project_root, '0a73f94e-90e3-4ebd-9d94-15dc8066ad52.xlsx')
 
     # model and feature info
     model_path = os.path.join(training_dir, 'ml_model.pkl')
     feature_path = os.path.join(training_dir, 'feature_info.pkl')
 
-    # Create dataset if not exists
+    # Create dataset if missing in EITHER location (try both, ignore write errors)
     try:
-        if not os.path.exists(dataset_path):
-            create_dummy_dataset(dataset_path)
+        if not os.path.exists(app_level_dataset_path):
+            create_dummy_dataset(app_level_dataset_path)
     except Exception:
-        # don't fail if writing dataset isn't permitted
+        # ignore write failures in constrained environments
+        pass
+
+    try:
+        if not os.path.exists(project_level_dataset_path):
+            create_dummy_dataset(project_level_dataset_path)
+    except Exception:
+        # ignore write failures in constrained environments
         pass
 
     # Create and save a simple DummyModel and feature_info
@@ -91,7 +103,9 @@ def create_dummy_model_artifacts(base_dir=None):
     with open(feature_path, 'wb') as f:
         pickle.dump(feature_info, f)
 
-    return model_path, feature_path, dataset_path
+    # Prefer project-level dataset path in return value, but also expose app-level
+    # path so callers can decide where to look first.
+    return model_path, feature_path, project_level_dataset_path, app_level_dataset_path
 
 
 if __name__ == '__main__':

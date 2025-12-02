@@ -88,28 +88,38 @@ class LandPredictionForm(forms.ModelForm):
         import pandas as pd  # For reading Excel file
         import os            # For file paths
         
-        # Get path to Excel file with village data
-        # Go up two folders from current file, then find Excel file
-        dataset_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 
-                                  '0a73f94e-90e3-4ebd-9d94-15dc8066ad52.xlsx')
-        
-            # If the dataset file doesn't exist, try to create a small demo dataset
-            # so the form dropdowns populate on a fresh deployment.
-            try:
-                if not os.path.exists(dataset_path):
-                    from .training import create_dummy_model as _cdm
-                    _cdm.create_dummy_model_artifacts(os.path.dirname(__file__))
-            except Exception:
-                pass
+        # Get candidate paths to the Excel dataset. We look in two locations:
+        #  - project root (two levels up) — where train_model.py and forms expect it
+        #  - app-level (one level up) — some helpers originally wrote here
+        project_root_path = os.path.join(os.path.dirname(os.path.dirname(__file__)),
+                                         '0a73f94e-90e3-4ebd-9d94-15dc8066ad52.xlsx')
+        app_level_path = os.path.join(os.path.dirname(__file__),
+                                      '0a73f94e-90e3-4ebd-9d94-15dc8066ad52.xlsx')
 
-            # Try reading the Excel (dataset) file; if it's missing or unreadable,
-            # fall back to an empty list so the form doesn't crash at runtime.
-            villages = []
+        # If neither exists, attempt to generate demo artifacts (this will try to
+        # write the dataset to both locations). Ignore errors — we don't want the
+        # site to crash on form load.
         try:
-            if os.path.exists(dataset_path):
-                df = pd.read_excel(dataset_path)
-                if 'Village' in df.columns:
-                    villages = sorted(df['Village'].dropna().unique())
+            if not os.path.exists(project_root_path) and not os.path.exists(app_level_path):
+                from .training import create_dummy_model as _cdm
+                _cdm.create_dummy_model_artifacts(os.path.dirname(__file__))
+        except Exception:
+            pass
+
+        # Try reading the dataset from the project root first, then fallback to
+        # the app-level file. If neither works, keep villages empty so dropdown
+        # shows the placeholder.
+        villages = []
+        try:
+            if os.path.exists(project_root_path):
+                df = pd.read_excel(project_root_path)
+            elif os.path.exists(app_level_path):
+                df = pd.read_excel(app_level_path)
+            else:
+                df = None
+
+            if df is not None and 'Village' in df.columns:
+                villages = sorted(df['Village'].dropna().unique())
         except Exception:
             # If anything goes wrong (file not found, read error, bad data),
             # keep villages empty. We avoid raising exceptions in form init so the
