@@ -57,7 +57,13 @@ def result(request):
             data = form.cleaned_data
             
             # Call ML function to predict price based on input data
-            predicted_price = predict_price(data)
+            try:
+                predicted_price = predict_price(data)
+            except RuntimeError as e:
+                # Model not available on server — show a friendly error message
+                from django.contrib import messages as _messages
+                _messages.error(request, 'Prediction currently unavailable — ML model not found on server. Please contact admin or run the training script.')
+                return redirect('land_price_app:home')
             
             # Save form data but don't commit to database yet
             # commit=False means "prepare the object but don't save"
