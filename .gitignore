@@ -31,11 +31,11 @@ db.sqlite3
 staticfiles/
 
 # Machine learning artifacts and raw data
+# (we keep model pickles out of git, but the small example dataset is tracked)
 *.pkl
 *.joblib
 *.h5
 *.hdf5
-0a73f94e-90e3-4ebd-9d94-15dc8066ad52.xlsx
 
 # Logs
 *.log
