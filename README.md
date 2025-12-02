@@ -95,6 +95,23 @@ A Django web application that predicts land prices in Satara using machine learn
 
 6. Access the application at: http://127.0.0.1:8000/
 
+## Deploying to Render (short notes)
+
+If you're deploying this app to Render and seeing "Bad Request (400)", the most common cause is Django's ALLOWED_HOSTS setting. Render provides the external hostname for your service; this project now auto-includes the Render hostname if present.
+
+Checklist for Render deployment:
+- In Render dashboard -> Environment, set these environment variables:
+   - SECRET_KEY (set a strong secret)
+   - DEBUG to False for production
+   - DATABASE_URL if you're using Render Postgres (recommended) — if not set the project will use local sqlite3
+   - (optional) ALLOWED_HOSTS — comma-separated list of hosts (e.g. my-app.onrender.com)
+
+Notes:
+- The app includes a `Procfile` configured to run gunicorn and `whitenoise` is enabled for serving static files.
+- During a Render deploy make sure `collectstatic` runs (Render runs build/run commands defined in the service; with Django this is generally automatic when gunicorn and whitenoise are present). If collectstatic fails, you can temporarily set `DISABLE_COLLECTSTATIC=1` while debugging.
+
+If you prefer not to rely on the automated Render host detection, explicitly set `ALLOWED_HOSTS` in the Render environment to include `your-service-name.onrender.com`.
+
 ## Project Structure
 
 ```
