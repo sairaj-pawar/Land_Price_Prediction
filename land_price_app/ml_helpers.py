@@ -13,11 +13,16 @@ def load_model():
     # Get the path to the feature info file (feature_info.pkl)
     feature_path = os.path.join(os.path.dirname(__file__), 'training', 'feature_info.pkl')
     
+    # Check that the model and feature files exist and load them.
+    # If missing, return (None, None) so callers can handle absence gracefully.
+    if not os.path.exists(model_path) or not os.path.exists(feature_path):
+        return None, None
+
     # Open and load the model file
     # 'rb' means read binary (pickle files are binary)
     with open(model_path, 'rb') as f:
         model = pickle.load(f)  # Load the trained model
-    
+
     # Open and load the feature info file
     with open(feature_path, 'rb') as f:
         feature_info = pickle.load(f)  # Load feature order and encoding info
@@ -65,6 +70,10 @@ def predict_price(data):
     """Make a price prediction using the trained model."""
     # Step 1: Load the trained model and feature information
     model, feature_info = load_model()
+    if model is None or feature_info is None:
+        # Model or feature info not available on this installation
+        # Raise a clear RuntimeError to be handled by caller (views)
+        raise RuntimeError('ML model not available on server. Train/upload model to enable predictions.')
     
     # Step 2: Prepare the input data in the format model expects
     # Convert user input to list of values in correct order
