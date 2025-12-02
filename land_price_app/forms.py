@@ -93,15 +93,27 @@ class LandPredictionForm(forms.ModelForm):
         dataset_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 
                                   '0a73f94e-90e3-4ebd-9d94-15dc8066ad52.xlsx')
         
-        # Read Excel file into DataFrame
-        df = pd.read_excel(dataset_path)
+        # Try reading the Excel (dataset) file; if it's missing or unreadable,
+        # fall back to an empty list so the form doesn't crash at runtime.
+        villages = []
+        try:
+            if os.path.exists(dataset_path):
+                df = pd.read_excel(dataset_path)
+                if 'Village' in df.columns:
+                    villages = sorted(df['Village'].dropna().unique())
+        except Exception:
+            # If anything goes wrong (file not found, read error, bad data),
+            # keep villages empty. We avoid raising exceptions in form init so the
+            # site doesn't return 500 on render.
+            villages = []
         
-        # Get unique village names, sort them alphabetically
-        villages = sorted(df['Village'].unique())
-        
-        # Set village dropdown choices to the list of villages
+        # Set village dropdown choices (if any) or a default placeholder
         # Format: [(value, display_name), ...]
-        self.fields['village'].widget.choices = [(v, v) for v in villages]
+        if villages:
+            self.fields['village'].widget.choices = [(v, v) for v in villages]
+        else:
+            # Keep a simple placeholder if the dataset isn't available
+            self.fields['village'].widget.choices = [('', 'Select village')]
 
 
 # This form handles user registration (sign up)
